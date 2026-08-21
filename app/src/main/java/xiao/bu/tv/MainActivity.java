@@ -79,7 +79,7 @@ public final class MainActivity extends Activity {
     private static final String CLOCK_LOCATION_CHANNEL_LIST = "channel_list";
     private static final String CLOCK_LOCATION_VIDEO = "video";
     private static final String GITHUB_URL = "https://github.com/buhanzhe/NativeWasmTv";
-    private static final int FIRST_LAUNCH_GROUP_INDEX = 1;
+    private static final int FIRST_LAUNCH_GROUP_INDEX = 0;
     private static final int FIRST_LAUNCH_CHANNEL_INDEX = 0;
     private static final long CHANNEL_BAR_TIMEOUT_MS = 3000L;
     private static final long PANEL_TIMEOUT_MS = 5000L;
