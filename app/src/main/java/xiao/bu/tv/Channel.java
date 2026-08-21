@@ -8,16 +8,23 @@ final class Channel {
     final String[] urls;
     final String yangshipinPid;
     final String yangshipinStreamId;
+    final int source;
 
     Channel(String number, String name, String streamId, String url,
             String yangshipinPid, String yangshipinStreamId) {
+        this(number, name, streamId, url, yangshipinPid, yangshipinStreamId,
+                ChannelCatalog.SOURCE_CUSTOM);
+    }
+
+    Channel(String number, String name, String streamId, String url,
+            String yangshipinPid, String yangshipinStreamId, int source) {
         this(number, name, streamId,
                 url == null ? new String[0] : new String[] { url },
-                yangshipinPid, yangshipinStreamId);
+                yangshipinPid, yangshipinStreamId, source);
     }
 
     private Channel(String number, String name, String streamId, String[] urls,
-            String yangshipinPid, String yangshipinStreamId) {
+            String yangshipinPid, String yangshipinStreamId, int source) {
         this.number = number;
         this.name = name;
         this.streamId = streamId;
@@ -25,6 +32,7 @@ final class Channel {
         this.url = urls.length == 0 ? null : urls[0];
         this.yangshipinPid = yangshipinPid;
         this.yangshipinStreamId = yangshipinStreamId;
+        this.source = source;
     }
 
     Channel withAdditionalUrl(String additionalUrl) {
@@ -37,7 +45,7 @@ final class Channel {
         System.arraycopy(urls, 0, combined, 0, urls.length);
         combined[urls.length] = additionalUrl;
         return new Channel(number, name, streamId, combined,
-                yangshipinPid, yangshipinStreamId);
+                yangshipinPid, yangshipinStreamId, source);
     }
 
     int sourceCount() {

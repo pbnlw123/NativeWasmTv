@@ -79,7 +79,7 @@ public final class MainActivity extends Activity {
     private static final String CLOCK_LOCATION_CHANNEL_LIST = "channel_list";
     private static final String CLOCK_LOCATION_VIDEO = "video";
     private static final String GITHUB_URL = "https://github.com/buhanzhe/NativeWasmTv";
-    private static final int FIRST_LAUNCH_GROUP_INDEX = 1;
+    private static final int FIRST_LAUNCH_GROUP_INDEX = 0;
     private static final int FIRST_LAUNCH_CHANNEL_INDEX = 0;
     private static final long CHANNEL_BAR_TIMEOUT_MS = 3000L;
     private static final long PANEL_TIMEOUT_MS = 5000L;
@@ -515,8 +515,8 @@ public final class MainActivity extends Activity {
             current.put("channelIndex", channelIndex);
             current.put("group", group.title);
             current.put("name", channel.name);
-            current.put("sourceIndex", group.source == ChannelCatalog.SOURCE_CUSTOM
-                    ? currentSourceIndex : 0);
+            current.put("sourceIndex", ChannelCatalog.sourceFor(group, channel)
+                    == ChannelCatalog.SOURCE_CUSTOM ? currentSourceIndex : 0);
             current.put("sourceCount", Math.max(1, channel.sourceCount()));
             root.put("current", current);
             JSONArray jsonGroups = new JSONArray();
@@ -1076,6 +1076,10 @@ public final class MainActivity extends Activity {
         return currentGroup().channels[currentChannelIndex];
     }
 
+    private int currentSource() {
+        return ChannelCatalog.sourceFor(currentGroup(), currentChannel());
+    }
+
     private void switchChannel(int index) {
         clearNumericChannelInput();
         currentSourceIndex = 0;
@@ -1103,7 +1107,8 @@ public final class MainActivity extends Activity {
         clearPendingPlayer();
         releasePlayer();
         resetVideoLayout();
-        showLoading(channel.name, group.source == ChannelCatalog.SOURCE_CUSTOM
+        int source = ChannelCatalog.sourceFor(group, channel);
+        showLoading(channel.name, source == ChannelCatalog.SOURCE_CUSTOM
                 ? customSourceStatus("正在连接") : "正在准备直播");
         try {
             resetProxyForChannelSwitch();
@@ -1113,8 +1118,8 @@ public final class MainActivity extends Activity {
             showChannelBar(channel.name, "切换失败: " + error.getMessage());
             return;
         }
-        if (group.source == ChannelCatalog.SOURCE_CCTV_WEB
-                || group.source == ChannelCatalog.SOURCE_CUSTOM) {
+        if (source == ChannelCatalog.SOURCE_CCTV_WEB
+                || source == ChannelCatalog.SOURCE_CUSTOM) {
             resolveFallbackUrl(channel, requestId);
             return;
         }
@@ -1128,7 +1133,7 @@ public final class MainActivity extends Activity {
     }
 
     private boolean switchCustomSource(int offset, boolean automatic, String reason) {
-        if (currentGroup().source != ChannelCatalog.SOURCE_CUSTOM) {
+        if (currentSource() != ChannelCatalog.SOURCE_CUSTOM) {
             return false;
         }
         Channel channel = currentChannel();
@@ -1181,8 +1186,8 @@ public final class MainActivity extends Activity {
     }
 
     private void resetProxyForChannelSwitch() throws IOException {
-        boolean statefulCmgSource = currentGroup().source != ChannelCatalog.SOURCE_CCTV_WEB
-                && currentGroup().source != ChannelCatalog.SOURCE_CUSTOM;
+        boolean statefulCmgSource = currentSource() != ChannelCatalog.SOURCE_CCTV_WEB
+                && currentSource() != ChannelCatalog.SOURCE_CUSTOM;
         HlsProxyServer.resetCmgSessionForChannelSwitch();
         HlsProxyServer previous = proxy;
         proxy = null;
@@ -1438,7 +1443,7 @@ public final class MainActivity extends Activity {
     }
 
     private void resolveFallbackUrl(final Channel channel, final int requestId) {
-        final boolean directCustomSource = currentGroup().source == ChannelCatalog.SOURCE_CUSTOM;
+        final boolean directCustomSource = currentSource() == ChannelCatalog.SOURCE_CUSTOM;
         final String configuredUrl = directCustomSource
                 ? channel.sourceUrl(currentSourceIndex) : channel.url;
         if (configuredUrl == null) {
@@ -1481,7 +1486,7 @@ public final class MainActivity extends Activity {
             startPlayer(channel, streamUrl);
         } catch (IOException error) {
             Log.e(TAG, "Unable to play " + channel.name, error);
-            if (currentGroup().source == ChannelCatalog.SOURCE_CUSTOM) {
+            if (currentSource() == ChannelCatalog.SOURCE_CUSTOM) {
                 switchCustomSource(1, true, "线路连接失败");
                 return;
             }
@@ -1519,7 +1524,7 @@ public final class MainActivity extends Activity {
 
         final IjkMediaPlayer nextPlayer = new IjkMediaPlayer();
         player = nextPlayer;
-        final boolean customSource = currentGroup().source == ChannelCatalog.SOURCE_CUSTOM;
+        final boolean customSource = currentSource() == ChannelCatalog.SOURCE_CUSTOM;
         final int sourceRequestId = playRequestId;
         final boolean softwareDecode = forceSoftwareDecode || shouldUseSoftwareDecode();
         activeSoftwareDecode = softwareDecode;
@@ -1562,7 +1567,7 @@ public final class MainActivity extends Activity {
         nextPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop",
                 softwareDecode ? 5 : 1);
         nextPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
-        final boolean cctvSource = currentGroup().source == ChannelCatalog.SOURCE_CCTV_WEB;
+        final boolean cctvSource = currentSource() == ChannelCatalog.SOURCE_CCTV_WEB;
         nextPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames",
                 cctvSource ? 140 : 60);
         nextPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 0);
@@ -1756,8 +1761,8 @@ public final class MainActivity extends Activity {
 
         final MediaPlayer nextPlayer = new MediaPlayer();
         systemPlayer = nextPlayer;
-        final boolean customSource = currentGroup().source == ChannelCatalog.SOURCE_CUSTOM;
-        final boolean cctvSource = currentGroup().source == ChannelCatalog.SOURCE_CCTV_WEB;
+        final boolean customSource = currentSource() == ChannelCatalog.SOURCE_CUSTOM;
+        final boolean cctvSource = currentSource() == ChannelCatalog.SOURCE_CCTV_WEB;
         final int sourceRequestId = playRequestId;
         activeSoftwareDecode = false;
         activePlayerChannel = channel;
@@ -2146,7 +2151,7 @@ public final class MainActivity extends Activity {
 
     private void recoverCctvPlayback(int requestId, IMediaPlayer watchedPlayer, String reason) {
         if (requestId != playRequestId || player != watchedPlayer
-                || currentGroup().source != ChannelCatalog.SOURCE_CCTV_WEB
+                || currentSource() != ChannelCatalog.SOURCE_CCTV_WEB
                 || stallRecoveryRequestId == requestId) {
             return;
         }
@@ -2158,7 +2163,7 @@ public final class MainActivity extends Activity {
     private void recoverSystemCctvPlayback(int requestId, MediaPlayer watchedPlayer,
             String reason) {
         if (requestId != playRequestId || systemPlayer != watchedPlayer
-                || currentGroup().source != ChannelCatalog.SOURCE_CCTV_WEB
+                || currentSource() != ChannelCatalog.SOURCE_CCTV_WEB
                 || stallRecoveryRequestId == requestId) {
             return;
         }
@@ -2169,7 +2174,8 @@ public final class MainActivity extends Activity {
 
     private void prefetchNearbyChannels(final Channel playingChannel) {
         final ChannelCatalog.Group group = currentGroup();
-        if (group.source != ChannelCatalog.SOURCE_CCTV_WEB
+        if (ChannelCatalog.sourceFor(group, group.channels[currentChannelIndex])
+                != ChannelCatalog.SOURCE_CCTV_WEB
                 || group.channels[currentChannelIndex] != playingChannel) {
             return;
         }
@@ -2499,7 +2505,7 @@ public final class MainActivity extends Activity {
             outputFps = player.getVideoOutputFramesPerSecond();
             decodeFps = player.getVideoDecodeFramesPerSecond();
         }
-        if (prepared && currentGroup().source == ChannelCatalog.SOURCE_CCTV_WEB) {
+        if (prepared && currentSource() == ChannelCatalog.SOURCE_CCTV_WEB) {
             long now = SystemClock.elapsedRealtime();
             long playbackPosition = player != null
                     ? player.getCurrentPosition() : systemPlayer.getCurrentPosition();
