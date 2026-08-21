@@ -36,7 +36,6 @@ final class ChannelCatalog {
     static final Channel[] CHANNELS = CCTV_CHANNELS;
 
     // Keep this order and naming aligned with https://www.yangshipin.cn/tv/home.
-    // The first group above remains the smaller CCTV.com fallback catalog.
     static final Channel[] YANGSHIPIN_CCTV_CHANNELS = new Channel[] {
             yangshipinChannel("1", "CCTV1", "600001859", "2024078201"),
             yangshipinChannel("2", "CCTV2", "600001800", "2024075401"),
@@ -68,45 +67,46 @@ final class ChannelCatalog {
     };
 
     static final Channel[] SATELLITE_CHANNELS = new Channel[] {
-            yangshipinChannel("1", "北京卫视", "600002309", "2024052703"),
-            yangshipinChannel("2", "江苏卫视", "600002521", "2024171103"),
-            yangshipinChannel("3", "东方卫视", "600002483", "2024054503"),
-            yangshipinChannel("4", "浙江卫视", "600002520", "2024054703"),
-            yangshipinChannel("5", "湖南卫视", "600002475", "2024054803"),
-            yangshipinChannel("6", "湖北卫视", "600002508", "2024171203"),
-            yangshipinChannel("7", "广东卫视", "600002485", "2024060903"),
-            yangshipinChannel("8", "广西卫视", "600002509", "2024060703"),
-            yangshipinChannel("9", "黑龙江卫视", "600002498", "2029797003"),
-            yangshipinChannel("10", "海南卫视", "600002506", "2024055603"),
-            yangshipinChannel("11", "重庆卫视", "600002531", "2024061103"),
-            yangshipinChannel("12", "深圳卫视", "600002481", "2024061303"),
-            yangshipinChannel("13", "四川卫视", "600002516", "2024061403"),
-            yangshipinChannel("14", "河南卫视", "600002525", "2029797303"),
-            yangshipinChannel("15", "福建东南卫视", "600002484", "2024061503"),
-            yangshipinChannel("16", "贵州卫视", "600002490", "2024061603"),
-            yangshipinChannel("17", "江西卫视", "600002503", "2024061703"),
-            yangshipinChannel("18", "辽宁卫视", "600002505", "2024171303"),
-            yangshipinChannel("19", "安徽卫视", "600002532", "2024171403"),
-            yangshipinChannel("20", "河北卫视", "600002493", "2024171503"),
-            yangshipinChannel("21", "山东卫视", "600002513", "2029787903"),
-            yangshipinChannel("22", "天津卫视", "600152137", "2019927003"),
-            yangshipinChannel("23", "吉林卫视", "600190405", "2025561503"),
-            yangshipinChannel("24", "陕西卫视", "600190400", "2029795103"),
-            yangshipinChannel("25", "甘肃卫视", "600190408", "2025561703"),
-            yangshipinChannel("26", "宁夏卫视", "600190737", "2025608503"),
-            yangshipinChannel("27", "内蒙古卫视", "600190401", "2025561203"),
-            yangshipinChannel("28", "云南卫视", "600190402", "2025561303"),
-            yangshipinChannel("29", "山西卫视", "600190407", "2025560803"),
-            yangshipinChannel("30", "青海卫视", "600190406", "2025559103"),
-            yangshipinChannel("31", "西藏卫视", "600190403", "2025558003"),
-            yangshipinChannel("32", "中国教育电视台1频道", "600171827", "2022823801"),
-            yangshipinChannel("33", "新疆卫视", "600152138", "2019927403")
+            satelliteChannel("1", "北京卫视", "600002309", "2024052703"),
+            satelliteChannel("2", "江苏卫视", "600002521", "2024171103"),
+            satelliteChannel("3", "东方卫视", "600002483", "2024054503"),
+            satelliteChannel("4", "浙江卫视", "600002520", "2024054703"),
+            satelliteChannel("5", "湖南卫视", "600002475", "2024054803"),
+            satelliteChannel("6", "湖北卫视", "600002508", "2024171203"),
+            satelliteChannel("7", "广东卫视", "600002485", "2024060903"),
+            satelliteChannel("8", "广西卫视", "600002509", "2024060703"),
+            satelliteChannel("9", "黑龙江卫视", "600002498", "2029797003"),
+            satelliteChannel("10", "海南卫视", "600002506", "2024055603"),
+            satelliteChannel("11", "重庆卫视", "600002531", "2024061103"),
+            satelliteChannel("12", "深圳卫视", "600002481", "2024061303"),
+            satelliteChannel("13", "四川卫视", "600002516", "2024061403"),
+            satelliteChannel("14", "河南卫视", "600002525", "2029797303"),
+            satelliteChannel("15", "福建东南卫视", "600002484", "2024061503"),
+            satelliteChannel("16", "贵州卫视", "600002490", "2024061603"),
+            satelliteChannel("17", "江西卫视", "600002503", "2024061703"),
+            satelliteChannel("18", "辽宁卫视", "600002505", "2024171303"),
+            satelliteChannel("19", "安徽卫视", "600002532", "2024171403"),
+            satelliteChannel("20", "河北卫视", "600002493", "2024171503"),
+            satelliteChannel("21", "山东卫视", "600002513", "2029787903"),
+            satelliteChannel("22", "天津卫视", "600152137", "2019927003"),
+            satelliteChannel("23", "吉林卫视", "600190405", "2025561503"),
+            satelliteChannel("24", "陕西卫视", "600190400", "2029795103"),
+            satelliteChannel("25", "甘肃卫视", "600190408", "2025561703"),
+            satelliteChannel("26", "宁夏卫视", "600190737", "2025608503"),
+            satelliteChannel("27", "内蒙古卫视", "600190401", "2025561203"),
+            satelliteChannel("28", "云南卫视", "600190402", "2025561303"),
+            satelliteChannel("29", "山西卫视", "600190407", "2025560803"),
+            satelliteChannel("30", "青海卫视", "600190406", "2025559103"),
+            satelliteChannel("31", "西藏卫视", "600190403", "2025558003"),
+            satelliteChannel("32", "中国教育电视台1频道", "600171827", "2022823801"),
+            satelliteChannel("33", "新疆卫视", "600152138", "2019927403")
     };
 
+    static final Channel[] BUILT_IN_CHANNELS = combine(
+            CCTV_CHANNELS, YANGSHIPIN_CCTV_CHANNELS, SATELLITE_CHANNELS);
+
     private static final Group[] BUILT_IN_GROUPS = new Group[] {
-            new Group("央视网 · 央视频道", SOURCE_CCTV_WEB, CCTV_CHANNELS),
-            new Group("央视频 · 央视频道", SOURCE_YSP_CCTV, YANGSHIPIN_CCTV_CHANNELS),
-            new Group("央视频 · 卫视频道", SOURCE_YSP_SATELLITE, SATELLITE_CHANNELS)
+            new Group("内置频道", SOURCE_CCTV_WEB, BUILT_IN_CHANNELS)
     };
 
     static volatile Group[] GROUPS = BUILT_IN_GROUPS;
@@ -159,10 +159,12 @@ final class ChannelCatalog {
         if (group.source == SOURCE_YSP_SATELLITE) {
             return 0;
         }
-        if (group.source == SOURCE_YSP_CCTV) {
-            return indexOfPid(group.channels, "600001811");
-        }
-        return indexOfNumber(group.channels, "13");
+        int cctv13Index = indexOfPid(group.channels, "600001811");
+        return cctv13Index == 0 ? indexOfNumber(group.channels, "13") : cctv13Index;
+    }
+
+    static int sourceFor(Group group, Channel channel) {
+        return group.source == SOURCE_CUSTOM ? SOURCE_CUSTOM : channel.source;
     }
 
     private static int indexOfPid(Channel[] channels, String pid) {
@@ -172,6 +174,20 @@ final class ChannelCatalog {
             }
         }
         return 0;
+    }
+
+    private static Channel[] combine(Channel[]... channelGroups) {
+        int total = 0;
+        for (Channel[] channels : channelGroups) {
+            total += channels.length;
+        }
+        Channel[] combined = new Channel[total];
+        int offset = 0;
+        for (Channel[] channels : channelGroups) {
+            System.arraycopy(channels, 0, combined, offset, channels.length);
+            offset += channels.length;
+        }
+        return combined;
     }
 
     static String preferHighBitrate(String url) {
@@ -190,13 +206,25 @@ final class ChannelCatalog {
     private static Channel channel(String number, String name, String streamId,
             String yangshipinPid, String yangshipinStreamId) {
         return new Channel(number, name, streamId, streamUrl(streamId),
-                yangshipinPid, yangshipinStreamId);
+                yangshipinPid, yangshipinStreamId, SOURCE_CCTV_WEB);
     }
 
     private static Channel yangshipinChannel(String number, String name,
             String yangshipinPid, String yangshipinStreamId) {
+        return yangshipinChannel(number, name, yangshipinPid, yangshipinStreamId,
+                SOURCE_YSP_CCTV);
+    }
+
+    private static Channel satelliteChannel(String number, String name,
+            String yangshipinPid, String yangshipinStreamId) {
+        return yangshipinChannel(number, name, yangshipinPid, yangshipinStreamId,
+                SOURCE_YSP_SATELLITE);
+    }
+
+    private static Channel yangshipinChannel(String number, String name,
+            String yangshipinPid, String yangshipinStreamId, int source) {
         return new Channel(number, name, "ysp_" + yangshipinPid, null,
-                yangshipinPid, yangshipinStreamId);
+                yangshipinPid, yangshipinStreamId, source);
     }
 
     private static String streamUrl(String streamId) {
